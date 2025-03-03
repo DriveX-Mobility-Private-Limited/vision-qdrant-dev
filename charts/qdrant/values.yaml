@@ -48,14 +48,14 @@ ingress:
     kubernetes.io/ingress.class: "nginx"
     # kubernetes.io/ingress.class: alb
   hosts:
-    - host: qdrant.drivex.dev
+    - host: vectors.drivex.dev
       paths:
         - path: /
           pathType: Prefix
           servicePort: 6333
   tls:
     - hosts:
-       - qdrant.drivex.dev
+       - vectors.drivex.dev
       secretName: vision-qdrant-tls
 
 livenessProbe:
