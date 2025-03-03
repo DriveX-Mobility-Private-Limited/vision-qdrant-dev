@@ -39,21 +39,24 @@ service:
       checksEnabled: false
 
 ingress:
-  enabled: false
-  ingressClassName: ""
+  enabled: true
+  ingressClassName: "nginx"
   additionalLabels: {}
-  annotations: {}
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-dev
+    app.kubernetes.io/name: vision-qdrant-dev
+    kubernetes.io/ingress.class: "nginx"
     # kubernetes.io/ingress.class: alb
   hosts:
-    - host: example-domain.com
+    - host: qdrant.drivex.dev
       paths:
         - path: /
           pathType: Prefix
           servicePort: 6333
-  tls: []
-    # - hosts:
-    #    - example-domain.com
-    #   secretName: tls-secret-name
+  tls:
+    - hosts:
+       - qdrant.drivex.dev
+      secretName: vision-qdrant-tls
 
 livenessProbe:
   enabled: false
@@ -116,9 +119,22 @@ lifecycle:
 # user and fsGroup
 updateVolumeFsOwnership: true
 
-nodeSelector: {}
-
-tolerations: []
+nodeSelector:
+  if-vision-pod: "true"
+  
+tolerations:
+  - key: "if-monitoring-pod"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
+  - key: "if-vision-pod"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
+  - key: "if-vision-spot-node-group"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule" 
 
 affinity: {}
     # podAntiAffinity:
@@ -139,10 +155,10 @@ topologySpreadConstraints: []
 
 persistence:
   accessModes: ["ReadWriteOnce"]
-  size: 10Gi
+  size: 50Gi
   annotations: {}
-  # storageVolumeName: qdrant-storage
-  # storageClassName: local-path
+  storageVolumeName: qdrant-storage
+  storageClassName: gp2
 
 # If you use snapshots or the snapshot shard transfer mechanism, we recommend
 # creating a separate volume of the same size as your main volume so that your
