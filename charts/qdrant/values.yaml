@@ -47,6 +47,18 @@ ingress:
     app.kubernetes.io/name: vision-qdrant-dev
     kubernetes.io/ingress.class: "nginx"
     # kubernetes.io/ingress.class: alb
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    # Enable if you need HTTP/2 support (especially helpful for gRPC)
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    # nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+    # Add if you need larger request bodies
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    # Consider adding the following for security
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    # Add authentication if needed
+    # nginx.ingress.kubernetes.io/auth-type: basic
+    # nginx.ingress.kubernetes.io/auth-secret: basic-auth
+    # nginx.ingress.kubernetes.io/auth-realm: "Authentication Required"    
   hosts:
     - host: vectors.drivex.dev
       paths:
@@ -86,13 +98,13 @@ additionalLabels: {}
 podAnnotations: {}
 podLabels: {}
 
-resources: {}
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
 
 containerSecurityContext:
   runAsNonRoot: true
