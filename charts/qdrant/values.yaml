@@ -135,18 +135,18 @@ lifecycle:
 updateVolumeFsOwnership: true
 
 nodeSelector:
-  if-vision-pod: "true"
+  if-reachx-spot-node-group: "true"
   
 tolerations:
   - key: "if-monitoring-pod"
     operator: "Equal"
     value: "true"
     effect: "NoSchedule"
-  - key: "if-vision-pod"
+  - key: "if-reachx-pod"
     operator: "Equal"
     value: "true"
     effect: "NoSchedule"
-  - key: "if-vision-spot-node-group"
+  - key: "if-reachx-spot-node-group"
     operator: "Equal"
     value: "true"
     effect: "NoSchedule" 
